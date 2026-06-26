@@ -86,8 +86,6 @@ const activeNavObserver = new IntersectionObserver(
 
 sections.forEach((section) => activeNavObserver.observe(section));
 
-form.addEventListener("submit", (event) => {
-  event.preventDefault();
-  formStatus.textContent = "Thanks! This demo form is ready to connect to a backend.";
-  form.reset();
+form.addEventListener("submit", () => {
+  formStatus.textContent = "Sending your message...";
 });
