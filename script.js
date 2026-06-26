@@ -86,6 +86,35 @@ const activeNavObserver = new IntersectionObserver(
 
 sections.forEach((section) => activeNavObserver.observe(section));
 
-form.addEventListener("submit", () => {
+form.addEventListener("submit", async (event) => {
+  event.preventDefault();
+
+  const submitButton = form.querySelector("button[type='submit']");
+  const formData = new FormData(form);
+  const payload = Object.fromEntries(formData.entries());
+
   formStatus.textContent = "Sending your message...";
+  submitButton.disabled = true;
+
+  try {
+    const response = await fetch(form.action, {
+      method: "POST",
+      headers: {
+        "Accept": "application/json",
+        "Content-Type": "application/json"
+      },
+      body: JSON.stringify(payload)
+    });
+
+    if (!response.ok) {
+      throw new Error("Form submission failed");
+    }
+
+    form.reset();
+    formStatus.textContent = "Message sent. Please check your email for a FormSubmit confirmation if this is your first message.";
+  } catch (error) {
+    formStatus.textContent = "Message could not be sent. Please email me directly at seansong429@gmail.com.";
+  } finally {
+    submitButton.disabled = false;
+  }
 });
